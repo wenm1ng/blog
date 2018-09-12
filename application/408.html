@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>小明个人博客 — 一个站在php开发之路上的草根程序员个人博客网站</title>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="php,文明个人博客,个人博客系统,小明博客,php程序员">
+<meta name="description" content="小明个人博客 — 一个站在php开发之路上的草根程序员个人博客网站">
+<LINK rel="Bookmark" href="favicon.ico" >
+<LINK rel="Shortcut Icon" href="/public/images/icon.jpg" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/staticRes/js/html5shiv.js"></script>
+<script type="text/javascript" src="/staticRes/js/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/public/plugin/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/public/plugin/Hui-iconfont/1.0.8/iconfont.min.css" />
+<link rel="stylesheet" type="text/css" href="/public/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/public/plugin/pifu/pifu.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" /> -->
+<link rel="stylesheet" href="/public/css/error.css">
+<link rel="stylesheet" href="/public/css/page.css">
+<!-- <script src="/js/bootstrap.min.js"></script> -->
+{block name="style"}{/block}
+<!--[if lt IE 9]>
+<link href="/staticRes/lib/h-ui/css/H-ui.ie.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } function showSide(){$('.navbar-nav').toggle();}</script>
+</head>
+<body>
+<header class="navbar-wrapper">
+    <div class="navbar navbar-fixed-top">
+        <div class="container cl">
+            <a class="navbar-logo hidden-xs" href="index.html">
+                <img class="logo" src="/public/images/logo.png" alt="小明博客" />
+            </a>
+            <a class="logo navbar-logo-m visible-xs" href="{:url('index/index/index')}">小明博客</a>
+            <a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:void(0);" onclick="showSide();">&#xe667;</a>
+            <nav class="nav navbar-nav nav-collapse w_menu" role="navigation">
+                <ul class="cl">
+                    <li class="active"> <a href="{:url('index/index/index')}" data-hover="首页">首页</a> </li>
+                    <li> <a href="{:url('home/chat/about')}" data-hover="关于我">关于我</a> </li>
+                    <li> <a href="{:url('home/chat/index')}" data-hover="碎言碎语">碎言碎语</a> </li>
+                    <li><a href="{:url('home/chat/study')}" data-hover="学无止尽">学无止尽</a></li>
+                    <li> <a href="{:url('home/chat/board')}" data-hover="留言板">留言板</a> </li>
+                </ul>
+            </nav>
+           
+        </div>
+    </div>
+</header>
+
+<!--body-->
+
+<div style="width:100%;margin-bottom:45%">
+	<div class="error" style="margin:0 auto;">
+
+	<h2>请求超时~！请重试T_T</h2>
+	<p>看到这个提示，就自认倒霉吧!</p>
+	<div class="reindex"><a href="{:url('index/index/index')}" target="_parent">返回首页</a></div>
+
+	</div>
+</div>
+<!--body-->
+
+
+
+<footer class="footer mt-20">
+    <div class="container-fluid" id="foot">
+        <p>Copyright &copy; 2016-2017 www.aiyanxin.club <br>
+            <a href="http://icp.chinaz.com/aiyanxin.club" target="_blank">粤ICP备17115499号-1</a>  
+        </p>
+    </div>
+</footer>
+<script type="text/javascript" src="/public/plugin/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/public/plugin/layer/3.0/layer.js"></script>
+<script type="text/javascript" src="/public/plugin/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/public/plugin/pifu/pifu.js"></script>
+<script type="text/javascript" src="/public/js/common.js"></script>
+<script> $(function(){ $(window).on("scroll",backToTopFun); backToTopFun(); }); </script>
+<script type="text/javascript" src="/plugin/jquery.SuperSlide/2.1.1/jquery.SuperSlide.min.js"></script>
+{block name="script"}{/block}
+<script>
+$(function(){
+//幻灯片
+jQuery(".slider_main .slider").slide({mainCell: ".bd ul", titCell: ".hd li", trigger: "mouseover", effect: "leftLoop", autoPlay: true, delayTime: 700, interTime: 2000, pnLoop: true, titOnClassName: "active"})
+//tips
+jQuery(".slideTxtBox").slide({titCell: ".hd ul", mainCell: ".bd ul", autoPage: true, effect: "top", autoPlay: true});
+//标签
+    $(".tags a").each(function(){
+        var x = 9;
+        var y = 0;
+        var rand = parseInt(Math.random() * (x - y + 1) + y);
+        $(this).addClass("tags"+rand)
+    });
+    
+    $("img.lazyload").lazyload({failurelimit : 3});
+});
+
+
+    $(".ajax-post").click(function(){
+        url = $(this).parents('form').attr('action');
+        target_form = $(this).attr('target-form');
+        form = $('.'+target_form);
+        query = form.serialize();
+        // alert(query);return;
+        $.post(url,query,function(data){
+            if(data.code == 1){
+                layer.alert(data.msg,{icon:6});
+                setTimeout(function(){
+                  window.location.href = data.url;
+                }, 1500)
+            }else{
+                layer.alert(data.msg,{icon:5});
+            }
+        },'json')
+    })
+</script> 
+
+</body>
+</html>

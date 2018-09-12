@@ -1,0 +1,439 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+  小明博客 - 会员登录
+</title><link href="/public/wenming/login/login.css" rel="stylesheet" type="text/css" />
+<link href="/public/wenming/login/footer.css" rel="stylesheet" type="text/css" />
+<link href="/public/wenming/login/css.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="/public/images/icon.jpg" type="image/x-icon" />
+    <script type="text/javascript" language="javascript" src="/public/wenming/login/1.js"></script>
+    
+    <script type="text/javascript" language="javascript" src="/public/wenming/login/2.js"></script>
+    
+    <script type="text/javascript" language="javascript" src="/public/wenming/login/login.js"></script>
+    <script type="text/javascript" src="/public/plugin/layer/3.0/layer.js"></script>
+
+<meta name="keywords" content="小明博客 - 会员登录," /><meta name="description" content="小明博客 - 会员登录" /></head>
+<body>
+    <center>
+        <div id="Head" align="left">
+            <a ><img src="/public/images/logo.png" alt="" style="height:54px;width:176px"/></a>
+        </div>
+    </center>
+    <div class="wrapper">
+        <div style="width: 100%; height: 25px; position: relative;">
+            <h3 style="font-size: 22px; color: #979797; font-weight: bolder; text-align: left;
+                height: 25px; line-height: 25px; float: right; margin: 0 100px 0 0; width: 400px;
+                position: relative;">
+                小明 博客 登录 <span style="font-size: 14px; font-weight: normal; position: absolute;
+                    right: 0px; bottom: 0px;">没有账户?<a href="{:url('register')}" style="color: #b42025;
+                        margin: 0px;">免费注册</a> </span>
+            </h3>
+        </div>
+        <div class="login">
+            <div class="tag">
+                <ul id="tags">
+                    <li class="on">普通登录</li>
+                    <li>快速登录</li>
+                </ul>
+            </div>
+            <!--tag-->
+            <div id="shows">
+               
+                <div class="user_infor">
+                    <form action="{:url('login')}" method="post">
+                    <div id="vanclLoginError" class="tips">
+                        用户名或者密码错误!
+                    </div>
+                    <div id="_uname" class="newtxt">
+                        <input type="text" name="loginName" style="width:358px;height:43px" placeholder="请输入用户名" id="" />
+                    </div>
+                    <div id="vanclUserNameError" class="tips">
+                        用户名不能为空!
+                    </div>
+                    <div id="_upwd" class="newtxt">
+                        <input type="password" name="password" style="width:358px;height:43px" placeholder="请输入密码" id="" />
+                    </div>
+                    <div id="vanclPasswordError" class="tips">
+                        密码不能为空!
+                    </div>
+                    <p id='pValidate' style="display:none" class="newtxt">
+                        <label style="color: #acacac">
+                            验证码</label><input maxlength="6" style="width: 155px; height: 48px; border: 0 none;
+                                text-indent: 10px;" id="calculatevalidate" name="calcultatevalidate" type="text"
+                                class="inputtextcolor" value="" />
+                        <img id='img_validate' oldsrc='/Controls/CalculateValidateCode.ashx?key=Login' src=""
+                            style="/* vertical-align: middle; */width: 145px; height: 53px; cursor: pointer;
+                            position: absolute; right: 0px; top: 0px; z-index: 11;" />
+                        <a style="cursor: pointer; float: right; line-height: 18px;" href="javascript:void(0)">
+                            看不清?换一张</a>
+                    </p>
+                    <div id="validateError" style="display: none" class="tips">
+                        验证码不能为空!
+                    </div>
+                    
+                    <div class="bt">
+                        <a class="forget" href="{:url('forget')}">找回密码</a>
+                        <div class="clear">
+                        </div>
+
+                        <input type="submit" value="登录" style="width:360px;height:50px;background:#b42025;font-size:20px;color:white" />
+                        <!-- <a id="vanclLogin" class="log" href="#">登 录</a> -->
+                        <a href="{:url('index/index/index')}" class="forget" style="float:left">返回主页</a>
+                    </div>
+                </form>
+                </div>
+           
+                <!-- 
+                ****************************************************
+                快速登录区域----开始
+                ****************************************************
+                 -->
+                <div class="user_infor" id="quick_id">
+                    <div id="_quickmobile" class="newtxt" style="width: 250px; float: left;">
+                        <label>
+                            输入邮箱
+                        </label>
+                        <input id="email" name="email" type="text" value="" />
+                    </div>
+                   
+                    <div id="err_phone" class="tips" style="width: 80%;">
+                    </div>
+                    <div id="_quickcode" class="newtxt" style="border: 0 none;">
+                        <label style="width: 142px; height: 43px; line-height: 43px; border: solid 1px #cbcbcb;">
+                            验证码
+                        </label>
+                        <input id="fcode" name="fcode" type="text" value="" style="width: 142px;
+                            border: solid 1px #cbcbcb; height: 43px; line-height: 43px;" />
+                        <img src="{:url('verify')}" id="fimg" onclick='this.src=this.src+"?c="+Math.random()' style="vertical-align: middle; width: 140px; height: 45px; position: absolute;
+                            top: 0; left: 137px;" />
+                        <a style="cursor: pointer; float: right; line-height: 18px;" class="reflash" href="javascript:void(0)">
+                            看不清?换一张</a>
+                    </div>
+                    
+                    <div id="_quickpiccodevalidmsg" class="tips">
+                        验证码不能为空!
+                    </div>
+                    <div id="_quickmobilecode" class="newtxt">
+                        <label>
+                            请输入邮箱验证码
+                        </label>
+                        <input id="email_code" name="email_code" type="text" value="" disabled/>
+                    </div>
+                    <div id="_quickmobilecodemsg" class="tips">
+                        请输入有效的手机号码!
+                    </div>
+                    <div class="bt">
+                        <a id="email_send" class="log" href="javascript:void(0);">发 送</a>
+                        <a id="email_login" class="log" href="javascript:void(0);" style="display:none">登 录</a>
+                    </div>
+                </div>
+                <!-- 横线 -->
+                <div class="lines">
+                </div>
+                
+                
+                
+                <!--tishi-->
+            </div>
+            <!--user_infor-->
+            
+        </div>
+        <div class="advert">
+            <img src="https://ssl.vanclimg.com/cms/20140829/login120412_newlogo.jpg" id="_advertImage" style="width: 465px; display: none" />
+            <img src="/public/images/xiaoming.jpg" style="width: 465px" />
+        </div>
+        <!--shows-->
+        <div style="clear: both;">
+        </div>
+    </div>
+    <center>
+        
+<div id="bottom" align="center">
+    <div id="bottoms">
+      <!-- <p class="bZp3">Copyright 2007 - 2016 vancl.com All Rights Reserved 京ICP证100557号 京公网安备11010102000579号 出版物经营许可证新出发京批字第直110138号</p> -->
+      <p>Copyright &copy; 2016-2017 www.aiyanxin.club <br>
+            <a href="http://icp.chinaz.com/aiyanxin.club" target="_blank">粤ICP备17115499号-1</a>  
+        </p>
+  </div>
+</div>
+    </center>
+    <!--Bottom End-->
+    <script type="text/javascript">
+        function openUrl(type) {
+            var curUrl = document.URL.toLowerCase();
+            if (curUrl.indexOf('https://') != -1) {
+                openwindow("https://api-login.vancl.com/redirect/" + type + "?callbackurl=/login/ReceiveCallback.aspx", "siteWin", "950", "850");
+            }
+            else {
+                openwindow("http://api-login.vancl.com/redirect/" + type + "?callbackurl=http://login.vancl.com/login/ReceiveCallback.aspx", "siteWin", "950", "850");
+            }
+        }
+        function openwindow(url, name, iWidth, iHeight) {
+            var url; //转向网页的地址;
+            var name; //网页名称，可为空;
+            var iWidth; //弹出窗口的宽度;
+            var iHeight; //弹出窗口的高度;
+            var iTop = (window.screen.availHeight - 30 - iHeight) / 2; //获得窗口的垂直位置;
+            var iLeft = (window.screen.availWidth - 10 - iWidth) / 2; //获得窗口的水平位置;
+            window.open(url, name, 'height=' + iHeight + ',innerHeight=' + iHeight + ',width=' + iWidth + ',innerWidth=' + iWidth + ',top=' + iTop + ',left=' + iLeft + ',z-look=yes,toolbar=no, menubar=no, scrollbars=no, resizable=no ,alwaysRaised=yes, location=no, status=no');
+        }
+
+    </script>
+    <script type="text/javascript">
+        /*函数在这里*/
+        function scroll(a, b, c, d, e) {
+            var EACH = function (o, fn) { for (var i = 0; i < o.length; i++) { fn.call(o[i], i, o) } }
+            var GF = function (o, t) { var s = o.getElementsByTagName(t), R = []; EACH(s, function (i, v) { s[i].parentNode == o && R.push(s[i]); }); return R; }
+            var G = function (x, y) { return GF(document.getElementById(x), y); }
+            var T = G(a, b), S = G(c, d); _show(0);
+            EACH(T, function (i, o) { T[i].onclick = (function (n) { return function () { _show(n); } })(i); });
+            function _show(n) { EACH(T, function (i, o) { S[i].style.display = "none"; T[i].className = "" }); T[n].className = e; S[n].style.display = "block"; }
+        }
+        /*用法在这里*/
+        /*绑定id为tags里的li为标签, id为shows里的div为展示层, hov为标签选中时的样式*/
+        scroll("tags", "li", "shows", "div", "on");
+
+
+        function hoverinput(id) {
+            var jqobj = $("#" + id);
+            //            $(jqobj).hover(function () {
+            //                var _value = $(this).find("input").val();
+            //                $(this).find("input").focus();
+            //                if (_value == "") {
+            //                    $(this).find("label").css({ "z-index": "8" });
+            //                    $(this).find("input").removeClass("hoverinput").addClass("hoverinput");
+            //                }
+            //            }, function () {
+            //                var _value = $(this).find("input").val();
+            //                if (_value != "") {
+            //                    $(this).find("input").removeClass("hoverinput");
+            //                } else {
+            //                    $(this).find("label").css({ "z-index": "10" });
+            //                }
+            //                $(this).find("input").blur();
+            //            });
+
+            setTimeout(function () {
+                if ($(jqobj).find("input").val() != "") {
+                    $(jqobj).find("label").css({ "z-index": "8" });
+                    $(jqobj).find("input").removeClass("hoverinput");
+                }
+            }, 1000);
+
+
+            $(jqobj).bind("click", function () {
+                var _value = $(this).find("input").val();
+                $(this).find("input").focus();
+                if (_value == "") {
+                    $(this).find("label").css({ "z-index": "8" });
+                    $(this).find("input").removeClass("hoverinput").addClass("hoverinput");
+                }
+            });
+
+            $(jqobj).find("input").focus(function () {
+                var _value = $(this).val();
+                if (_value == "") {
+                    $(this).parent().find("label").css({ "z-index": "8" });
+                    $(this).parent().find("input").removeClass("hoverinput").addClass("hoverinput");
+                }
+            });
+
+            $(jqobj).find("input").blur(function () {
+                var _value = $(this).val();
+                if (_value != "") {
+                    $(this).removeClass("hoverinput");
+                } else {
+                    $(this).parent().find("label").css({ "z-index": "10" });
+                }
+                //$(this).blur();
+            });
+
+            $(jqobj).find("input").keyup(function () {
+                var _value = $(this).val();
+                if (_value != "") {
+                    $(this).removeClass("hoverinput");
+                }
+            });
+
+            $(jqobj).find("input").keydown(function () {
+                var _value = $(this).val();
+                if (_value != "") {
+                    $(this).removeClass("hoverinput");
+                }
+            });
+
+            setTimeout(function () {
+                $("input").blur();
+            }, '500');
+        }
+
+
+        $(document).ready(function () {
+            hoverinput("_uname", "Email/手机号");
+            hoverinput("_upwd");
+            hoverinput("pValidate");
+            hoverinput("_quickmobile");
+            hoverinput("_quickmobilecode");
+            hoverinput("_quickcode");
+
+            //            setTimeout(function () {
+            //                $("input").blur();
+            //            },'500');
+
+        });
+
+        //        window.onload = function () {
+        //            $("input").blur();
+        //        }
+        //点击刷新按钮
+        $(function(){
+            $('.reflash').click(function(){
+              img = $(this).prev();
+              src = $(this).prev().attr('src');
+              if(src.indexOf('?')>0){
+                img.attr("src", src+'&random='+Math.random());  
+              }else{  
+                img.attr("src", src.replace(/\?.*$/,'')+'?'+Math.random());  
+              }  
+            })
+
+            flag = false;
+
+            //邮箱验证
+            $("#email").blur(function(){
+              e=$(this);
+              //清除
+              $("#_quickmobile").next('span').remove();
+              ee=e.val();
+              // 邮箱规则
+              var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                if(!myreg.test(ee))
+                {
+                    $("#_quickmobile").next('span').remove();
+                    $("<span>请输入有效的邮箱</span>").css('color','red').insertAfter($("#_quickmobile"));
+                    flag=true;
+                }else{
+                    //Ajax的验证
+                    $.get("{:url('ajax')}",{email:ee,type:2},function(data){
+                        // alert(data);
+                        //判断
+                        if(data){
+                            $("#_quickmobile").next('span').remove();
+                            $("<span>该邮箱不存在</span>").css('color','red').insertAfter($("#_quickmobile"));
+                            flag=true;
+                        }else{
+                            $("#_quickmobile").next('span').remove();
+                            $("<span>输入正确</span>").css('color','green').insertAfter($("#_quickmobile"));
+                            flag=false;
+                        }
+                    });          
+                }                         
+            })
+        
+
+            // 验证码的验证
+            $("#fcode").live('focus',function(){
+              $("#_quickcode").next('span').remove();
+              fff=$(this).val();
+              if(fff){        
+                // alert(fff);
+                //Ajax的验证
+                $.get("{:url('ajax')}",{fcode:fff,type:3},function(data){
+                    // alert(data);
+                    //判断
+                    if(data){
+                        $("#_quickcode").next('span').remove();
+                        $("<span style='width:410px;height:10px;float:left'>验证码输入正确</span>").css('color','green').insertAfter($("#_quickcode"));
+                          flag=true;
+                    }else{
+                        $("#_quickcode").next('span').remove();
+                        $("<span style='width:410px;height:10px;float:left'>验证码不正确</span>").css('color','red').insertAfter($("#_quickcode"));
+                        // alert('1');
+                          flag=false;
+                    }
+                });               
+              }else{
+                $("<span style='width:410px;height:10px;float:left'>请输入验证码</span>").css('color','red').insertAfter($("#_quickcode"));
+              }      
+            }).blur(function(){
+              //清除
+                $("#_quickcode").next('span').remove();
+                ff=$(this).val();
+                if(ff){
+                    //Ajax的验证
+                    $.get("{:url('ajax')}",{fcode:ff,type:3},function(data1){
+                        // alert(data);
+                        //判断
+                        if(data1){
+                            $("#_quickcode").next('span').remove();
+                            $("<span style='width:410px;height:10px;float:left'>验证码输入正确</span>").css('color','green').insertAfter($("#_quickcode"));
+                              flag=true;
+                        }else{
+                            $("#_quickcode").next('span').remove();
+                            $("<span style='width:410px;height:10px;float:left'>验证码不正确</span>").css('color','red').insertAfter($("#_quickcode"));
+                            // alert('2');
+                              flag=false;
+                        }
+                    })        
+                }else{
+                    $("<span style='width:410px;height:10px;float:left'>请输入验证码</span>").css('color','red').insertAfter($("#_quickcode"));
+                }
+                  
+            })
+
+            // 判断空值
+            if( $("#email").val()==null || $("#fcode").val()==null){
+              flag==false;
+            }
+
+            
+            $("#email_send").click(function(){
+                if(flag){
+                    var that = $(this);
+                    var login_div = $("#email_login");
+                    var email = $("#email").val();
+                    var email_code = $("#email_code");
+                    var url = "{:url('email_login')}";
+                    $.post(url,{email:email,type:'send'},function(data){
+                        if(data.code == 1){
+                            layer.alert(data.msg,{icon:6});
+                            email_code.attr('disabled',false);
+                            that.toggle();
+                            login_div.toggle();
+                        }else{
+                            layer.alert(data.msg,{icon:5});
+                        }
+                    })
+                }
+            })
+
+            //下一步登录
+            $("#email_login").click(function(){
+                if(flag){
+                    var that = $(this);
+                    var email = $("#email").val();
+                    var email_code = $("#email_code");
+                    var url = "{:url('email_login')}";
+                    var code = email_code.val();
+
+                    $.post(url,{email:email,code:code,type:'login'},function(data1){
+                        if(data1.code == 1){
+                            layer.alert(data1.msg + '页面将自动跳转~',{icon:6});
+                            setTimeout(function(){
+                                window.location.href = "{:url('index/index/index')}";
+                            }, 1500)
+                        }else{
+                            layer.alert(data1.msg,{icon:5});
+                        }
+                    }) 
+                }
+            })
+        })
+        
+    </script>
+    
+    <script src="/public/wenming/login/quicklogin.js"></script>
+</body>
+</html>
