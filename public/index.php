@@ -15,5 +15,7 @@ define('APP_DEBUG', true);
 // 定义应用目录
 define('APP_PATH', __DIR__ . '/../application/');
 
+//自定义常量
+define('ARTICLE_LIMIT', 10);//文章每页个数
 // 加载框架引导文件
 require __DIR__ . '/../thinkphp/start.php';

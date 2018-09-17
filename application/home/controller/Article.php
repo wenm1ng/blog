@@ -141,27 +141,21 @@
 			}
 		}
 
-		// public function recursion($child){
-		// 	// $child = Db::name('article_comment')->where("link_comment_id = '{$id}' and is_reply = 1")->order('create_time DESC')->select();
+		//文章滚动条内容加载
+		public function article_page(){
+			$id   = input('article_id');
+			$page = input('page');
+			$limit = 10;
+			$left = ($page-1)*$limit;
+			$list = Db::query("SELECT * FROM blog_article_comment WHERE article_id = ? AND is_reply = 0 LIMIT $left,$limit",[$id]);
+			
+			foreach ($list as $key => $val) {
+				$reply_list = Db::query("SELECT * FROM blog_article_comment WHERE link_comment_id = '{$val['comment_id']}' AND is_reply = 1 ORDER BY create_time ASC");
+				$list[$key]['child'] = $reply_list?:"";
+			}
 
-		// 	if(!empty($child)){
-		// 		foreach ($child as $k => $val) {
-		// 			$user_info_child = Db::name("user_home")->where("user_id = '{$val['user_id']}'")->find();
-		// 			if(empty($user_info_child)){
-		// 				$child[$k]['img'] = '';
-		// 			}else{
-		// 				$child[$k]['img'] = $user_info_child['img'];
-		// 			}
-
-		// 			$info = Db::name('article_comment')->where("link_comment_id = '{$val['comment_id']}'")->select();
-		// 			if(empty($info)){
-		// 				return $child;
-		// 			}else{
-		// 				self::recursion($child);
-		// 			}
-		// 		}
-		// 	}
-		// }
+			$this->success('返回成功','',$list);
+		}
 
 
 	}
