@@ -100,7 +100,7 @@
 		                                    <div class="comment-body">
 		                                        <div class="comment-content"> {$vo.content}</div>
 	                                        	{if condition="$Think.session.home_uid neq $vo.user_id"}
-													<a href="javascript:void(0)" style="float:right;" dataid="{$vo.user_id}" dataname="{$vo.user_name}" commentid="{$vo.comment_id}"  class="reply out-reply" dataid="{$i}">回复</a>
+													<a href="javascript:void(0)" style="float:right;" dataid="{$vo.user_id}" dataname="{$vo.user_name}" commentid="{$vo.comment_id}"  class="reply out-reply" onclick="reply_fun(this)" >回复</a>
 		                                        {/if}
 		                                    	
 		                                    </div>
@@ -329,7 +329,7 @@
 
 		reply = 0;
 		
-		$('.reply').click(function(){
+		reply_fun = function(obj){
 			div = '<div id="Smohan_FaceBox1" class="comment comment-reply out-div" style="float:right;width:100%;margin-top:20px">'+
 			            '<div id="err2" class="Huialert Huialert-danger hidden radius">成功状态提示</div>'+
 			                '<textarea class="textarea smohan_text1" id="Smohan_text1"  style="height:100px;width:100%" > </textarea>'+
@@ -338,11 +338,8 @@
 			                '<a class="cancelReply f-r mt-10 no_reply">取消回复</a>'+
 			        '</div>';
 			if(reply == 0){
-				parent_li = $(this).parents('.comment');
+				parent_li = $(obj).parents('li');
 				parent_li.append(div);
-				// poarent_li.prepend(div);
-				// poarent_li.after(div);
-				// poarent_li.before(div);
 				reply = 1;
 
 				$("a.face1").smohanfacebox1({
@@ -351,15 +348,15 @@
 					textid : "Smohan_text1" //文本框 ID
 				});
 
-				to_user_id = $(this).attr('dataid');
-				to_user_name = $(this).attr('dataname');
-				comment_id = $(this).parents('.out-div').find('.out-reply').attr('commentid');
+				to_user_id = $(obj).attr('dataid');
+				to_user_name = $(obj).attr('dataname');
+				comment_id = $(obj).parents('.out-div').find('.out-reply').attr('commentid');
 				//回复
 				$('.Smohan_Showface').click(function() {
-					content = $(this).parent('div').find('#Smohan_text1').val();
+					content = $(obj).parent('div').find('#Smohan_text1').val();
 					article_id = {:input('id')};
 
-					brother = $(this).parents('.comment').find('.comment-main');
+					brother = $(obj).parents('.comment').find('.comment-main');
 					$.post("{:url('reply')}",{content:content,link_comment_id:comment_id,to_user_id:to_user_id,to_user_name:to_user_name,article_id:article_id,is_reply:1},function(data){
 						if(data.code == 1){
 							// layer.alert(data.msg + '页面即将自动跳转~',{icon:6});
@@ -399,18 +396,18 @@
 						}
 					})
 				});
-
 			}else{
 				$('.comment-reply').remove();
 				reply = 0;
 			}
 
 			$('.no_reply').click(function(){
-				$(this).parents('.comment-reply').remove();
+				$(obj).parents('.comment-reply').remove();
 				reply = 0;
 			})
-		})
 
+			
+		}
 		
 	
 	// var a = PullToRefresh.init({
@@ -454,87 +451,7 @@
 						dataType:'json',
 						data:{article_id:article_id,page:page},
 						success:function(data){
-							loadgif.css('display','none');
-							page++;
-							scroll_status = 0;
-							if(data.code == 0){
-								scroll_status = 1;
-								remind.css('display','block');
-								return;
-							}
-							$.each(data.data,function(key,val){
-								if(val['child'].length != 0){
-									$.each(val['child'],function(k,v){
-										if(v.user_id != 0){
-											html_name = '<a class="comment-author" href="#">'+v.user_name+'</a>';
-										}else{
-											html_name = '<span class="comment-author">'+v.user_name+'</span>'
-										}
-
-										if(v.to_user_id != 0){
-											to_html_name = '<a class="comment-author" href="#">'+v.to_user_name+'</a>';
-										}else{
-											to_html_name = '<span class="comment-author" href="#">'+v.to_user_name+'</span>';
-										}
-
-										if(login_id != v.user_id){
-											reply_btn2 = '<a href="javascript:void(0)" style="float:right;" dataid="'+v.user_id+'" dataname="'+v.user_name+'" commentid="'+v.comment_id+'"  class="reply out-reply" dataid="'+k+'">回复</a>'
-										}else{
-											reply_btn2 = '';
-										}
-
-										reply_div += '<li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="'+v.img+'"></i></a>'+
-					                                '<div class="comment-main">'+
-					                                    '<header class="comment-header">'+
-					                                        '<div class="comment-meta">'+
-					                                        	html_name+ ' 回复： '+ to_html_name+
-					                                            '<time title="'+ v.create_time +'" datetime="'+ v.create_time +'" class="f-r">'+ v.create_time +'</time>'+
-					                                        '</div>'+
-					                                    '</header>'+
-					                                    '<div class="comment-body">'+
-					                                        '<div class="comment-content">'+ v.content +'</div>'+
-					                                        reply_btn2+
-					                                    '</div>'+
-					                                '</div>'+
-					                            '</li>';
-									})
-								}
-
-								if(login_id != val.user_id){
-									reply_btn1 = '<a href="javascript:void(0)" style="float:right;" dataid="'+val.user_id+'" dataname="'+val.user_name+'" commentid="'+val.comment_id+'"  class="reply out-reply" dataid="'+key+'">回复</a>'
-				                                       
-								}else{
-									reply_btn1 = '';
-								}
-
-								if(val.user_id != 0){
-									html_name = '<a class="comment-author" href="#">'+val.user_name+'</a>';
-								}else{
-									html_name = '<span class="comment-author">'+val.user_name+'</span>'
-								}
-
-								comment_div += '<div style="border:1px solid #ccc;padding:20px;margin:20px 0px" class="out-div">'+
-													'<li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="'+ val.img +'"></i></a>'+
-						                                '<div class="comment-main">'+
-						                                    '<header class="comment-header">'+
-						                                        '<div class="comment-meta">'+html_name+
-						                                            '<time title="'+ val.create_time +'" datetime="'+ val.create_time +'" class="f-r">'+ val.create_time +'</time>'+
-						                                        '</div>'+
-						                                    '</header>'+
-						                                    '<div class="comment-body">'+
-						                                        '<div class="comment-content">'+ val.content +'</div>'+
-						                                        reply_btn1+
-						                                    '</div>'+
-						                                '</div>'+
-						                            '</li>'+
-						                            reply_div+
-						                        '</div>';
-							});
-							comment_list.append(comment_div);
-							that.scrollTop(scrollTop);
-							
-							$('.reply').click(function(){
-
+							reply_fun = function(obj){
 								div = '<div id="Smohan_FaceBox1" class="comment comment-reply out-div" style="float:right;width:100%;margin-top:20px">'+
 								            '<div id="err2" class="Huialert Huialert-danger hidden radius">成功状态提示</div>'+
 								                '<textarea class="textarea smohan_text1" id="Smohan_text1"  style="height:100px;width:100%" > </textarea>'+
@@ -543,7 +460,7 @@
 								                '<a class="cancelReply f-r mt-10 no_reply">取消回复</a>'+
 								        '</div>';
 								if(reply == 0){
-									parent_li = $(this).parents('li');
+									parent_li = $(obj).parents('li');
 									parent_li.append(div);
 									reply = 1;
 
@@ -553,15 +470,15 @@
 										textid : "Smohan_text1" //文本框 ID
 									});
 
-									to_user_id = $(this).attr('dataid');
-									to_user_name = $(this).attr('dataname');
-									comment_id = $(this).parents('.out-div').find('.out-reply').attr('commentid');
+									to_user_id = $(obj).attr('dataid');
+									to_user_name = $(obj).attr('dataname');
+									comment_id = $(obj).parents('.out-div').find('.out-reply').attr('commentid');
 									//回复
 									$('.Smohan_Showface').click(function() {
-										content = $(this).parent('div').find('#Smohan_text1').val();
+										content = $(obj).parent('div').find('#Smohan_text1').val();
 										article_id = {:input('id')};
 
-										brother = $(this).parents('.comment').find('.comment-main');
+										brother = $(obj).parents('.comment').find('.comment-main');
 										$.post("{:url('reply')}",{content:content,link_comment_id:comment_id,to_user_id:to_user_id,to_user_name:to_user_name,article_id:article_id,is_reply:1},function(data){
 											if(data.code == 1){
 												// layer.alert(data.msg + '页面即将自动跳转~',{icon:6});
@@ -608,10 +525,92 @@
 								}
 
 								$('.no_reply').click(function(){
-									$(this).parents('.comment-reply').remove();
+									$(obj).parents('.comment-reply').remove();
 									reply = 0;
 								})
-							})
+							}
+
+							loadgif.css('display','none');
+							page++;
+							scroll_status = 0;
+							if(data.code == 0){
+								scroll_status = 1;
+								remind.css('display','block');
+								return;
+							}
+							$.each(data.data,function(key,val){
+								if(val['child'].length != 0){
+									$.each(val['child'],function(k,v){
+										if(v.user_id != 0){
+											html_name = '<a class="comment-author" href="#">'+v.user_name+'</a>';
+										}else{
+											html_name = '<span class="comment-author">'+v.user_name+'</span>'
+										}
+
+										if(v.to_user_id != 0){
+											to_html_name = '<a class="comment-author" href="#">'+v.to_user_name+'</a>';
+										}else{
+											to_html_name = '<span class="comment-author" href="#">'+v.to_user_name+'</span>';
+										}
+
+										if(login_id != v.user_id){
+											reply_btn2 = '<a href="javascript:void(0)" style="float:right;" dataid="'+v.user_id+'" dataname="'+v.user_name+'" commentid="'+v.comment_id+'"  class="reply out-reply" onclick="reply_fun(this)">回复</a>'
+										}else{
+											reply_btn2 = '';
+										}
+
+										reply_div += '<li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="'+v.img+'"></i></a>'+
+					                                '<div class="comment-main">'+
+					                                    '<header class="comment-header">'+
+					                                        '<div class="comment-meta">'+
+					                                        	html_name+ ' 回复： '+ to_html_name+
+					                                            '<time title="'+ v.create_time +'" datetime="'+ v.create_time +'" class="f-r">'+ v.create_time +'</time>'+
+					                                        '</div>'+
+					                                    '</header>'+
+					                                    '<div class="comment-body">'+
+					                                        '<div class="comment-content">'+ v.content +'</div>'+
+					                                        reply_btn2+
+					                                    '</div>'+
+					                                '</div>'+
+					                            '</li>';
+									})
+								}
+
+								if(login_id != val.user_id){
+									reply_btn1 = '<a href="javascript:void(0)" style="float:right;" dataid="'+val.user_id+'" dataname="'+val.user_name+'" commentid="'+val.comment_id+'"  class="reply out-reply" onclick="reply_fun(this)" >回复</a>'
+				                                       
+								}else{
+									reply_btn1 = '';
+								}
+
+								if(val.user_id != 0){
+									html_name = '<a class="comment-author" href="#">'+val.user_name+'</a>';
+								}else{
+									html_name = '<span class="comment-author">'+val.user_name+'</span>'
+								}
+
+								comment_div += '<div style="border:1px solid #ccc;padding:20px;margin:20px 0px" class="out-div">'+
+													'<li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="'+ val.img +'"></i></a>'+
+						                                '<div class="comment-main">'+
+						                                    '<header class="comment-header">'+
+						                                        '<div class="comment-meta">'+html_name+
+						                                            '<time title="'+ val.create_time +'" datetime="'+ val.create_time +'" class="f-r">'+ val.create_time +'</time>'+
+						                                        '</div>'+
+						                                    '</header>'+
+						                                    '<div class="comment-body">'+
+						                                        '<div class="comment-content">'+ val.content +'</div>'+
+						                                        reply_btn1+
+						                                    '</div>'+
+						                                '</div>'+
+						                            '</li>'+
+						                            reply_div+
+						                        '</div>';
+							});
+							comment_list.append(comment_div);
+							that.scrollTop(scrollTop);
+							
+							
+							
 						},
 						error:function(){
 							layer.alert("服务器出错，请稍后再试",{icon:5});
