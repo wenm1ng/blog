@@ -147,14 +147,38 @@
 			$page = input('page');
 			$limit = 10;
 			$left = ($page-1)*$limit;
-			$list = Db::query("SELECT * FROM blog_article_comment WHERE article_id = ? AND is_reply = 0 LIMIT $left,$limit",[$id]);
+			$list = Db::query("SELECT * FROM blog_article_comment  WHERE article_id = ? AND is_reply = 0 LIMIT $left,$limit",[$id]);
 			
-			foreach ($list as $key => $val) {
-				$reply_list = Db::query("SELECT * FROM blog_article_comment WHERE link_comment_id = '{$val['comment_id']}' AND is_reply = 1 ORDER BY create_time ASC");
-				$list[$key]['child'] = $reply_list?:"";
+			if(!empty($list)){
+				foreach ($list as $key => $val) {
+					if($val['user_id'] != 0){
+						$info = Db::query("SELECT `img` FROM blog_user_home WHERE user_id = '{$val['user_id']}' LIMIT 1");
+					}else{
+						$info = array();
+					}
+
+					$list[$key]['img'] = $info?$info['img']:"/public/images/user-4.png";
+
+					$reply_list = Db::query("SELECT * FROM blog_article_comment WHERE link_comment_id = '{$val['comment_id']}' AND is_reply = 1 ORDER BY create_time ASC");
+
+					if($reply_list){
+						foreach ($reply_list as $k => $v) {
+							if($v['user_id'] != 0)
+								$reply_info = Db::query("SELECT `img` FROM blog_user_home WHERE user_id = '{$val['user_id']}' LIMIT 1");
+							else
+								$reply_info = array();
+							$reply_list[$k]['img'] = $reply_info?$reply_info['img']:"/public/images/user-4.png";
+							
+						}
+					}
+					$list[$key]['child'] = $reply_list?:array();
+				}
+				
+				$this->success('返回成功','',$list);
+			}else{
+				$this->error('无数据');
 			}
 
-			$this->success('返回成功','',$list);
 		}
 
 

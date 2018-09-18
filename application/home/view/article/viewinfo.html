@@ -5,6 +5,9 @@
 		.comment-body{
 			width:100%;
 		}
+		.out-reply{
+			margin-right:10%;
+		}
 	</style>
 {/block}
 {block name="body"}
@@ -55,6 +58,7 @@
 					<div class="panel panel-default  mb-20">
 						<div class="tab-category">
 			                <a href=""><strong>评论区</strong></a>
+			                <input type="hidden" name="user_id" value="{$Think.session.home_uid}">
 			            </div>
 						<div class="panel-body">
 							<div class="panel-body" style="margin: 0 3%;">
@@ -123,7 +127,6 @@
 			                            </li>
 		                            {/volist}
 		                        </div>
-	                           
 
 	                            {/volist}
                     		{/empty}
@@ -131,11 +134,14 @@
                         </ul>
                     </div>
                     <div class="loadgif" style="display:none">
-                    	<img src="/public/img/load.gif" alt="" style="width:50%;margin:-7% 0 0 23%">
+                    	<img src="/public/img/load.gif" alt="" style="width:50%;margin:-2% 0 0 23%">
                     </div>
-                    <div class="_page">
+                    <div class="remind" style="display:none;margin-left:23%">
+                    	<span>oOh~没有更多内容了！> <..~ </span>
+                    </div>
+                   <!--  <div class="_page">
                     	{$article_page}
-                    </div>
+                    </div> -->
                     <div class="line"></div>
                     <!--用于评论-->
                     <div class="mt-20" id="ct" class="out-div">
@@ -321,8 +327,6 @@
 			
 		});
 
-		
-
 		reply = 0;
 		
 		$('.reply').click(function(){
@@ -334,8 +338,11 @@
 			                '<a class="cancelReply f-r mt-10 no_reply">取消回复</a>'+
 			        '</div>';
 			if(reply == 0){
-				parent_li = $(this).parents('li');
+				parent_li = $(this).parents('.comment');
 				parent_li.append(div);
+				// poarent_li.prepend(div);
+				// poarent_li.after(div);
+				// poarent_li.before(div);
 				reply = 1;
 
 				$("a.face1").smohanfacebox1({
@@ -405,59 +412,219 @@
 		})
 
 		
-	});
 	
-	var a = PullToRefresh.init({
-        mainElement: 'body',
-        triggerElement: 'body',
-        onRefresh: function (cb) {
-        	cb();
-        	alert(111);
-          // setTimeout(function () {
-          //   cb();
-          //   var appElement = document.querySelector('[ng-controller=talkCtrl]');
-          //   var $scope = angular.element(appElement).scope();
-          //       $scope.listTalks($scope.pagingInfo.current_page + 1);
-          // }, 1500);
-        }
-    });
+	// var a = PullToRefresh.init({
+ //        mainElement: 'body',
+ //        triggerElement: 'body',
+ //        onRefresh: function (cb) {
+ //        	cb();
+ //        	alert(111);
+ //        }
+ //    });
+		login_id      = $('input[name="user_id"]').val();
+		scroll_status = 0;
+		page          = 2;
+		article_id    = {:input('id')};
+		comment_list  = $(".commentList");
+		loadgif       = $(".loadgif");
+		remind        = $('.remind');
+		first_scroll  = 0;
+	    $(window).on('scroll',function(){
 
-    // $(window).scroll(function(event) {
-    //     // if($(this).scrollTop() +  $(this).height() +50 >= window.scrollHeight){
-    //     //     alert(1);
-    //     // }
-    //     // console.log($(window).scrollTop());
-    //     // console.log($(window).height());
-    //     // console.log(document.documentElement.height());
-    // });
-    scroll_status = 0;
-    page = 2;
-    article_id = {:input('id')};
-    $(window).scroll(function(){
-	　　var scrollTop = $(this).scrollTop();
-	　　var scrollHeight = $(document).height();
-	　　var windowHeight = $(this).height();
-		// console.log(scrollHeight);
-		// console.log(windowHeight);
-		// console.log(scrollTop);
-	
-		// console.log(scrollHeight - scrollTop);
-		if(scrollHeight - scrollTop <= 1590 && scroll_status == 0){
-			scroll_status = 1;
-			$(".loadgif").css('display','block');
-			$.ajax({
-				type:'POST',
-				url:"{:url('article_page')}",
-				dataType:'json',
-				data:{article_id:article_id,page:page},
-				success:function(data){
-					console.log(data);
-				},
-				error:function(){
-					layer.alert("服务器出错，请稍后再试",{icon:5});
-				}
-			});
-		}
+	    	that = $(this);
+		　　var scrollTop = $(this).scrollTop();
+		　　var scrollHeight = $(document).height();
+		　　var windowHeight = $(this).height();
+
+			comment_div = '';
+			reply_div = '';
+
+			// console.log(scrollHeight);
+			// console.log(windowHeight);
+			// console.log(scrollTop);
+		
+			// console.log(scrollHeight - scrollTop);
+			if(scrollHeight - scrollTop <= 1590 && scroll_status == 0){
+				scroll_status = 1;
+				loadgif.css('display','block');
+				setTimeout(function(){
+					$.ajax({
+						type:'POST',
+						url:"{:url('article_page')}",
+						dataType:'json',
+						data:{article_id:article_id,page:page},
+						success:function(data){
+							loadgif.css('display','none');
+							page++;
+							scroll_status = 0;
+							if(data.code == 0){
+								scroll_status = 1;
+								remind.css('display','block');
+								return;
+							}
+							$.each(data.data,function(key,val){
+								if(val['child'].length != 0){
+									$.each(val['child'],function(k,v){
+										if(v.user_id != 0){
+											html_name = '<a class="comment-author" href="#">'+v.user_name+'</a>';
+										}else{
+											html_name = '<span class="comment-author">'+v.user_name+'</span>'
+										}
+
+										if(v.to_user_id != 0){
+											to_html_name = '<a class="comment-author" href="#">'+v.to_user_name+'</a>';
+										}else{
+											to_html_name = '<span class="comment-author" href="#">'+v.to_user_name+'</span>';
+										}
+
+										if(login_id != v.user_id){
+											reply_btn2 = '<a href="javascript:void(0)" style="float:right;" dataid="'+v.user_id+'" dataname="'+v.user_name+'" commentid="'+v.comment_id+'"  class="reply out-reply" dataid="'+k+'">回复</a>'
+										}else{
+											reply_btn2 = '';
+										}
+
+										reply_div += '<li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="'+v.img+'"></i></a>'+
+					                                '<div class="comment-main">'+
+					                                    '<header class="comment-header">'+
+					                                        '<div class="comment-meta">'+
+					                                        	html_name+ ' 回复： '+ to_html_name+
+					                                            '<time title="'+ v.create_time +'" datetime="'+ v.create_time +'" class="f-r">'+ v.create_time +'</time>'+
+					                                        '</div>'+
+					                                    '</header>'+
+					                                    '<div class="comment-body">'+
+					                                        '<div class="comment-content">'+ v.content +'</div>'+
+					                                        reply_btn2+
+					                                    '</div>'+
+					                                '</div>'+
+					                            '</li>';
+									})
+								}
+
+								if(login_id != val.user_id){
+									reply_btn1 = '<a href="javascript:void(0)" style="float:right;" dataid="'+val.user_id+'" dataname="'+val.user_name+'" commentid="'+val.comment_id+'"  class="reply out-reply" dataid="'+key+'">回复</a>'
+				                                       
+								}else{
+									reply_btn1 = '';
+								}
+
+								if(val.user_id != 0){
+									html_name = '<a class="comment-author" href="#">'+val.user_name+'</a>';
+								}else{
+									html_name = '<span class="comment-author">'+val.user_name+'</span>'
+								}
+
+								comment_div += '<div style="border:1px solid #ccc;padding:20px;margin:20px 0px" class="out-div">'+
+													'<li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="'+ val.img +'"></i></a>'+
+						                                '<div class="comment-main">'+
+						                                    '<header class="comment-header">'+
+						                                        '<div class="comment-meta">'+html_name+
+						                                            '<time title="'+ val.create_time +'" datetime="'+ val.create_time +'" class="f-r">'+ val.create_time +'</time>'+
+						                                        '</div>'+
+						                                    '</header>'+
+						                                    '<div class="comment-body">'+
+						                                        '<div class="comment-content">'+ val.content +'</div>'+
+						                                        reply_btn1+
+						                                    '</div>'+
+						                                '</div>'+
+						                            '</li>'+
+						                            reply_div+
+						                        '</div>';
+							});
+							comment_list.append(comment_div);
+							that.scrollTop(scrollTop);
+							
+							$('.reply').click(function(){
+
+								div = '<div id="Smohan_FaceBox1" class="comment comment-reply out-div" style="float:right;width:100%;margin-top:20px">'+
+								            '<div id="err2" class="Huialert Huialert-danger hidden radius">成功状态提示</div>'+
+								                '<textarea class="textarea smohan_text1" id="Smohan_text1"  style="height:100px;width:100%" > </textarea>'+
+								                '<p><a href="javascript:void(0)" class="face1" title="表情"></a></p>'+
+								                '<button type="button" class="btn btn-primary radius mt-10 Smohan_Showface">回复</button>'+
+								                '<a class="cancelReply f-r mt-10 no_reply">取消回复</a>'+
+								        '</div>';
+								if(reply == 0){
+									parent_li = $(this).parents('li');
+									parent_li.append(div);
+									reply = 1;
+
+									$("a.face1").smohanfacebox1({
+										Event : "click",	//触发事件	
+										divid : "Smohan_FaceBox1", //外层DIV ID
+										textid : "Smohan_text1" //文本框 ID
+									});
+
+									to_user_id = $(this).attr('dataid');
+									to_user_name = $(this).attr('dataname');
+									comment_id = $(this).parents('.out-div').find('.out-reply').attr('commentid');
+									//回复
+									$('.Smohan_Showface').click(function() {
+										content = $(this).parent('div').find('#Smohan_text1').val();
+										article_id = {:input('id')};
+
+										brother = $(this).parents('.comment').find('.comment-main');
+										$.post("{:url('reply')}",{content:content,link_comment_id:comment_id,to_user_id:to_user_id,to_user_name:to_user_name,article_id:article_id,is_reply:1},function(data){
+											if(data.code == 1){
+												// layer.alert(data.msg + '页面即将自动跳转~',{icon:6});
+												user_name = data.data.user_name;
+												user_img = data.data.user_img;
+												is_login = data.data.user_id;
+
+												if(is_login == 1){
+													html_name = '<a class="comment-author" href="#">'+user_name+'</a>';
+												}else{
+													html_name = '<span class="comment-author">'+user_name+'</span>'
+												}
+
+												if(to_user_id == 1){
+													to_html_name = '<a class="comment-author" href="#">'+to_user_name+'</a>';
+												}else{
+													to_html_name = '<span class="comment-author" href="#">'+to_user_name+'</span>';
+												}
+												reply_content = '<li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="'+user_img+'"></i></a>'+
+								                                '<div class="comment-main">'+
+								                                    '<header class="comment-header">'+
+								                                        '<div class="comment-meta">'+
+								                                        	html_name+ ' 回复： '+ to_html_name+
+								                                            '<time title="'+ getNowFormatDate() +'" datetime="'+ getNowFormatDate() +'" class="f-r">'+ getNowFormatDate() +'</time>'+
+								                                        '</div>'+
+								                                    '</header>'+
+								                                    '<div class="comment-body">'+
+								                                        '<div class="comment-content">'+ content +'</div>'+
+								                                    '</div>'+
+								                                '</div>'+
+								                            '</li>';
+								                brother.after(reply_content);
+								                parent_li.find('#Smohan_FaceBox1').remove();
+								                reply = 0;
+											}else{
+												layer.alert(data.msg,{icon:5});
+											}
+										})
+									});
+
+								}else{
+									$('.comment-reply').remove();
+									reply = 0;
+								}
+
+								$('.no_reply').click(function(){
+									$(this).parents('.comment-reply').remove();
+									reply = 0;
+								})
+							})
+						},
+						error:function(){
+							layer.alert("服务器出错，请稍后再试",{icon:5});
+						}
+					});
+
+				},1000);
+
+				
+			}
+		});
+
 	});
+
 	</script>
 {/block}

@@ -89,9 +89,9 @@
 <script>
 $(function(){
 //幻灯片
-jQuery(".slider_main .slider").slide({mainCell: ".bd ul", titCell: ".hd li", trigger: "mouseover", effect: "leftLoop", autoPlay: true, delayTime: 700, interTime: 2000, pnLoop: true, titOnClassName: "active"})
+// jQuery(".slider_main .slider").slide({mainCell: ".bd ul", titCell: ".hd li", trigger: "mouseover", effect: "leftLoop", autoPlay: true, delayTime: 700, interTime: 2000, pnLoop: true, titOnClassName: "active"})
 //tips
-jQuery(".slideTxtBox").slide({titCell: ".hd ul", mainCell: ".bd ul", autoPage: true, effect: "top", autoPlay: true});
+// jQuery(".slideTxtBox").slide({titCell: ".hd ul", mainCell: ".bd ul", autoPage: true, effect: "top", autoPlay: true});
 //标签
     $(".tags a").each(function(){
         var x = 9;
@@ -100,7 +100,7 @@ jQuery(".slideTxtBox").slide({titCell: ".hd ul", mainCell: ".bd ul", autoPage: t
         $(this).addClass("tags"+rand)
     });
     
-    $("img.lazyload").lazyload({failurelimit : 3});
+    // $("img.lazyload").lazyload({failurelimit : 3});
 });
 
     $(".ajax-post").click(function(){
