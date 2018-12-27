@@ -84,9 +84,11 @@
 					}
 
 					//获取回复
-					$reply_list = Db::name('board')->where("is_reply = 1 and link_board_id = '{$val['board_id']}'")->select();
+					$reply_list = Db::name('board')->alias('b')->join('user_home u','u.user_id = b.user_id','left')->where("is_reply = 1 and link_board_id = '{$val['board_id']}'")->select();
 					$board_list['data'][$key]['child'] = $reply_list;
 				}
+
+				// print_r($board_list['data']);
 				return view('board',['board_list'=>$board_list,'_page'=>$page]);
 			}
 		}
