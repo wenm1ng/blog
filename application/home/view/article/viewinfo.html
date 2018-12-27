@@ -288,6 +288,10 @@
 		$('.Smohan_Showface').click(function() {
 			if($(this).attr('dataid') == 'comment'){
 				content = $('.smohan_text').val();
+				if(content.length <= 0){
+					layer.alert('请输入评论内容',{icon:5});
+					return false;
+				}
 				to_user_id = $('#create_userid').val();
 				to_user_name = $('#create_username').val();
 				article_id = {:input('id')};
@@ -354,6 +358,10 @@
 				//回复
 				$('.Smohan_Showface').click(function() {
 					content = $(obj).parent('div').find('#Smohan_text1').val();
+					if(content.length <= 0){
+						layer.alert('请输入回复内容',{icon:5});
+						return false;
+					}
 					article_id = {:input('id')};
 
 					brother = $(obj).parents('.comment').find('.comment-main');
