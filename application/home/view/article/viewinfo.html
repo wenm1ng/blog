@@ -162,7 +162,7 @@
 						
                         <div class="text-r mt-10">
                         	<input type="hidden" id="user_img" value="{$user_img}">
-                            <button id="Smohan_Showface" class="btn btn-primary radius Smohan_Showface" dataid="comment" style="margin-right:120px"> 发表评论</button>
+                            <button id="Smohan_Showface" class="btn btn-primary radius Smohan_Showface_comment" dataid="comment" style="margin-right:120px"> 发表评论</button>
                         </div>
                     </div>
                     <!--用于回复-->
@@ -285,7 +285,7 @@
 		}
 		// console.log(randomNum(99999,999999));
 		//Demo测试
-		$('.Smohan_Showface').click(function() {
+		$('.Smohan_Showface_comment').click(function() {
 			if($(this).attr('dataid') == 'comment'){
 				content = $('.smohan_text').val();
 				if(content.length <= 0){
@@ -357,7 +357,8 @@
 				comment_id = $(obj).parents('.out-div').find('.out-reply').attr('commentid');
 				//回复
 				$('.Smohan_Showface').click(function() {
-					content = $(obj).parent('div').find('#Smohan_text1').val();
+					content = $(obj).parents('.comment').find('#Smohan_text1').val();
+					
 					if(content.length <= 0){
 						layer.alert('请输入回复内容',{icon:5});
 						return false;
@@ -457,84 +458,7 @@
 						dataType:'json',
 						data:{article_id:article_id,page:page},
 						success:function(data){
-							reply_fun = function(obj){
-								div = '<div id="Smohan_FaceBox1" class="comment comment-reply out-div" style="float:right;width:100%;margin-top:20px">'+
-								            '<div id="err2" class="Huialert Huialert-danger hidden radius">成功状态提示</div>'+
-								                '<textarea class="textarea smohan_text1" id="Smohan_text1"  style="height:100px;width:100%" > </textarea>'+
-								                '<p><a href="javascript:void(0)" class="face1" title="表情"></a></p>'+
-								                '<button type="button" class="btn btn-primary radius mt-10 Smohan_Showface">回复</button>'+
-								                '<a class="cancelReply f-r mt-10 no_reply">取消回复</a>'+
-								        '</div>';
-								if(reply == 0){
-									parent_li = $(obj).parents('li');
-									parent_li.append(div);
-									reply = 1;
-
-									$("a.face1").smohanfacebox1({
-										Event : "click",	//触发事件	
-										divid : "Smohan_FaceBox1", //外层DIV ID
-										textid : "Smohan_text1" //文本框 ID
-									});
-
-									to_user_id = $(obj).attr('dataid');
-									to_user_name = $(obj).attr('dataname');
-									comment_id = $(obj).parents('.out-div').find('.out-reply').attr('commentid');
-									//回复
-									$('.Smohan_Showface').click(function() {
-										content = $(obj).parent('div').find('#Smohan_text1').val();
-										article_id = {:input('id')};
-
-										brother = $(obj).parents('.comment').find('.comment-main');
-										$.post("{:url('reply')}",{content:content,link_comment_id:comment_id,to_user_id:to_user_id,to_user_name:to_user_name,article_id:article_id,is_reply:1},function(data){
-											if(data.code == 1){
-												// layer.alert(data.msg + '页面即将自动跳转~',{icon:6});
-												user_name = data.data.user_name;
-												user_img = data.data.user_img;
-												is_login = data.data.user_id;
-
-												if(is_login == 1){
-													html_name = '<a class="comment-author" href="#">'+user_name+'</a>';
-												}else{
-													html_name = '<span class="comment-author">'+user_name+'</span>'
-												}
-
-												if(to_user_id == 1){
-													to_html_name = '<a class="comment-author" href="#">'+to_user_name+'</a>';
-												}else{
-													to_html_name = '<span class="comment-author" href="#">'+to_user_name+'</span>';
-												}
-												reply_content = '<li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="'+user_img+'"></i></a>'+
-								                                '<div class="comment-main">'+
-								                                    '<header class="comment-header">'+
-								                                        '<div class="comment-meta">'+
-								                                        	html_name+ ' 回复： '+ to_html_name+
-								                                            '<time title="'+ getNowFormatDate() +'" datetime="'+ getNowFormatDate() +'" class="f-r">'+ getNowFormatDate() +'</time>'+
-								                                        '</div>'+
-								                                    '</header>'+
-								                                    '<div class="comment-body">'+
-								                                        '<div class="comment-content">'+ content +'</div>'+
-								                                    '</div>'+
-								                                '</div>'+
-								                            '</li>';
-								                brother.after(reply_content);
-								                parent_li.find('#Smohan_FaceBox1').remove();
-								                reply = 0;
-											}else{
-												layer.alert(data.msg,{icon:5});
-											}
-										})
-									});
-
-								}else{
-									$('.comment-reply').remove();
-									reply = 0;
-								}
-
-								$('.no_reply').click(function(){
-									$(this).parents('.comment-reply').remove();
-									reply = 0;
-								})
-							}
+							
 
 							loadgif.css('display','none');
 							page++;
