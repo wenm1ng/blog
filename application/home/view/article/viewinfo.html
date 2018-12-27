@@ -5,7 +5,7 @@
 		.comment-body{
 			width:100%;
 		}
-		.out-reply{
+		.reply{
 			margin-right:10%;
 		}
 	</style>
@@ -120,7 +120,7 @@
 			                                    <div class="comment-body">
 			                                        <div class="comment-content"> {$val.content}</div>
 		                                        	{if condition="$Think.session.home_uid neq $val.user_id"}
-			                                    		<a href="javascript:void(0)" style="float:right;" dataid="{$val.user_id}" dataname="{$val.user_name}" class="reply">回复</a>
+			                                    		<a href="javascript:void(0)" style="float:right;" dataid="{$val.user_id}" dataname="{$val.user_name}" class="reply" onclick="reply_fun(this)">回复</a>
 			                                    	{/if}
 			                                    </div>
 			                                </div>
@@ -147,8 +147,8 @@
                     <div class="mt-20" id="ct" class="out-div">
                         <div id="err" class="Huialert Huialert-danger hidden radius">成功状态提示</div>
 
-						<div id="Smohan_FaceBox">
-						   <textarea name="content" id="Smohan_text" class="smohan_text" style="width:100%;resize:none;"></textarea>
+						<div id="Smohan_FaceBox" style="width:100%">
+						   <textarea name="content" id="Smohan_text" class="smohan_text" style="width:92%;resize:none;"></textarea>
 						   <p>
 						   <a href="javascript:void(0)" class="face" title="表情"></a>
 						   <!-- <button class="button" id="Smohan_Showface" style="float:left;margin-left:60%;margin-top:40px">显示表情</button> -->
@@ -168,7 +168,7 @@
                     <!--用于回复-->
                     <div class="comment hidden">
                         <div id="err2" class="Huialert Huialert-danger hidden radius">成功状态提示</div>
-                            <textarea class="textarea" style="height:100px;width:662px" > </textarea>
+                            <textarea class="textarea" style="height:100px;width:100%" > </textarea>
                             <button type="button" class="btn btn-primary radius mt-10">回复</button>
                             <a class="cancelReply f-r mt-10">取消回复</a>
                     </div>
@@ -402,11 +402,9 @@
 			}
 
 			$('.no_reply').click(function(){
-				$(obj).parents('.comment-reply').remove();
+				$(this).parents('.comment-reply').remove();
 				reply = 0;
 			})
-
-			
 		}
 		
 	
@@ -525,7 +523,7 @@
 								}
 
 								$('.no_reply').click(function(){
-									$(obj).parents('.comment-reply').remove();
+									$(this).parents('.comment-reply').remove();
 									reply = 0;
 								})
 							}
