@@ -38,7 +38,7 @@
 							{volist name="board_list.data" id="vo"}
 
 				    		<div style="border:1px solid #ccc;padding:20px;margin:20px 0px" class="out-div">
-				                <li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="{empty name='vo.img'}/public/images/user-4.png{else /}{$vo.img}{/empty}"></i></a>
+				                <li class="item cl comment"> <a href="#"><i class="avatar size-L radius"><img alt="" src="{if condition='$vo.img'}{$vo.img}{else/}/public/images/user-4.png{/if}"></i></a>
 				                    <div class="comment-main">
 				                        <header class="comment-header">
 				                            <div class="comment-meta">

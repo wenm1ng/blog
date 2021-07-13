@@ -9,10 +9,7 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 use think\Route;
-// Route::rule('login','home/user/login');
-// Route::rule('register','home/user/register');
-// Route::rule('','index/index/index');
-// Route::rule('article','home/article/');
+// Route::get('app/qq','home/user/login','');
 
 // return [
 //     '__pattern__' => [

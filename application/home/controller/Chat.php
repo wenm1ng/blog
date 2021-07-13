@@ -70,21 +70,21 @@
 				}
 			}else{
 				//获取留言
-				$page = Db::name('board')->where("is_reply = 0")->order("create_time DESC")->paginate(10);
+				$page = Db::name('board')->field('b.*,u.img')->alias('b')->join('user_home u','u.user_id = b.user_id','left')->where("is_reply = 0")->order("create_time DESC")->paginate(10);
 
 				$board_list = obj_to_array($page);
 				// print_r($board_list);exit;
 				foreach ($board_list['data'] as $key => $val) {
 					//获取头像
-					$user_info = Db::name('user_home')->field('img')->where("user_id = '{$val['user_id']}'")->find();
-					if(empty($user_info)){
-						$board_list['data'][$key]['img'] = '';
-					}else{
-						$board_list['data'][$key]['img'] = $user_info['img'];
-					}
+					// $user_info = Db::name('user_home')->field('img')->where("user_id = '{$val['user_id']}'")->find();
+					// if(empty($user_info)){
+					// 	$board_list['data'][$key]['img'] = '';
+					// }else{
+					// 	$board_list['data'][$key]['img'] = $user_info['img'];
+					// }
 
 					//获取回复
-					$reply_list = Db::name('board')->alias('b')->join('user_home u','u.user_id = b.user_id','left')->where("is_reply = 1 and link_board_id = '{$val['board_id']}'")->select();
+					$reply_list = Db::name('board')->field('b.*,u.img')->alias('b')->join('user_home u','u.user_id = b.user_id','left')->where("is_reply = 1 and link_board_id = '{$val['board_id']}'")->select();
 					$board_list['data'][$key]['child'] = $reply_list;
 				}
 

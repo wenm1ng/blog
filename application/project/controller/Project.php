@@ -1,37 +1,28 @@
 <?php 
-	namespace app\admin\controller;
+	namespace app\project\controller;
 
 	use \base\Base_1;
 	use think\Db;
 	use think\Controller;
 	use think\Session;
 	use think\Request;
+	use \base\Baseapi;
 
-	class Article extends Base_1
+	class Project extends Baseapi
 	{
 		public $username ;
 		public $userid;
 
 		public function __construct(){
-			parent::__construct();
-			$this->username = session::get('username');
-			$this->uid = session::get('uid');
+			// parent::__construct();
+			// $this->username = session::get('username');
+			// $this->uid = session::get('uid');
 
 		}
 
 		//文章首页
-		public function index(){
-			$table_name = 'article';
-			$list = Db::name($table_name)->paginate(10);
-            //把分页数据赋值给模板变量
-            // $p = new \think\Page($list,2);
-            $this->assign('page',$list);
-            $list =obj_to_array($list);
-            $this->assign('list',$list);
-            $this->assign('meta_title','文章列表');
-
-            // print_r($list);exit;
-            return $this->fetch();
+		public function populars(){
+			return json(['data'=>[],'code'=>200,'message'=>'操作完成']);
 		}
 
 
@@ -92,5 +83,4 @@
 			}
 		}
 	}
-
- ?>
+?>
